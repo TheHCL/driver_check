@@ -1,0 +1,2 @@
+report_name=bang.xlsx
+HWID_list=drv_list.txt

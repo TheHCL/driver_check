@@ -3,6 +3,22 @@ import openpyxl
 from tkinter import messagebox
 import tkinter
 
+def read_settings():
+    if os.path.exists("settings.txt"):
+        setting = open("settings.txt")
+        global report_name
+        global hwid_list
+        report_name = setting.readline().strip()
+        report_name = report_name.replace("report_name=","")
+        report_name = report_name.replace(" ","")
+        hwid_list = setting.readline().strip()
+        hwid_list = hwid_list.replace("HWID_list=","")
+        hwid_list = hwid_list.replace(" ","")
+        
+    else:
+        tkinter.Tk().withdraw()
+        messagebox.showerror("File not found","settings.txt not found")
+    
 
 def check_files():
     if os.path.exists("devcon_amd64.exe"):
@@ -10,20 +26,16 @@ def check_files():
     else:
         tkinter.Tk().withdraw()
         messagebox.showerror("File not found","devcon_amd64.exe not found")
-    if os.path.exists("drv_list.txt"):
+    if os.path.exists(hwid_list):
         pass
     else:
         tkinter.Tk().withdraw()
-        messagebox.showerror("File not found","drv_list.txt not found")
+        messagebox.showerror("File not found",hwid_list+" not found")
     
 
 
-def get_device_info():
-    os.system("devcon_amd64.exe drivernodes * > drivernodes.txt")
-
-
 def read_id():
-    f = open("drv_list.txt")
+    f = open(hwid_list)
     count =0
     line = f.readline().strip("\n")
     global name_list
@@ -57,30 +69,34 @@ def get_device_version():
         f.close()
 
 def to_excel():   
-    if os.path.exists("stress.xlsx"):
-        wb = openpyxl.load_workbook("stress.xlsx")
+    if os.path.exists(report_name):
+        wb = openpyxl.load_workbook(report_name)
         sheet = wb.active
         # load excel and active (ready to write data)
         get_device_version()
         sheet.append(drv_description)
         sheet.append(drv_version)
-        wb.save("stress.xlsx")
+        wb.save(report_name)
     else :
         wb = openpyxl.Workbook()
-        wb.save("stress.xlsx")
+        wb.save(report_name)
         to_excel()
+
+def excel_adjust():
+    wb = openpyxl.load_workbook(report_name)
+    sheet = wb.active
+    sheet.insert_cols(1)
+    wb.save(report_name)
 
 def clear_temp_data():
     for x in name_list:
         os.remove(x)
     print("done")
 
-def test():
-    print(drv_description)
-    print(drv_version)
 
 
 
+read_settings()
 check_files()
 read_id()
 to_excel()
