@@ -6,3 +6,4 @@
 
   * devcon
   * drv_list.txt (contain hwid)
+  * settings.txt 
