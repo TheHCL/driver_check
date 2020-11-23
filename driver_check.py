@@ -8,6 +8,10 @@ def read_settings():
         setting = open("settings.txt")
         global report_name
         global hwid_list
+        global tool_name
+        tool_name = setting.readline().strip()
+        tool_name = tool_name.replace("tool_name=","")
+        tool_name = tool_name.replace(" ","")
         report_name = setting.readline().strip()
         report_name = report_name.replace("report_name=","")
         report_name = report_name.replace(" ","")
@@ -21,11 +25,11 @@ def read_settings():
     
 
 def check_files():
-    if os.path.exists("devcon_amd64.exe"):
+    if os.path.exists(tool_name):
         pass
     else:
         tkinter.Tk().withdraw()
-        messagebox.showerror("File not found","devcon_amd64.exe not found")
+        messagebox.showerror("File not found",tool_name+" not found")
     if os.path.exists(hwid_list):
         pass
     else:
@@ -44,7 +48,7 @@ def read_id():
         print(line)
         name = "output"+str(count)+".txt"
         name_list.append(name)
-        os.system("devcon_amd64.exe drivernodes "+line+" > "+name)
+        os.system(tool_name+" drivernodes "+line+" > "+name)
         line = f.readline().strip("\n")
         count+=1
     f.close()
@@ -81,12 +85,6 @@ def to_excel():
         wb = openpyxl.Workbook()
         wb.save(report_name)
         to_excel()
-
-def excel_adjust():
-    wb = openpyxl.load_workbook(report_name)
-    sheet = wb.active
-    sheet.insert_cols(1)
-    wb.save(report_name)
 
 def clear_temp_data():
     for x in name_list:

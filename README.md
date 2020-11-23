@@ -1,6 +1,6 @@
 ﻿# driver_check
 
-* Double click on exe file to execute.
+* Fill the blanks in settings.txt and choose the HWID you want then execute the script(driver_check)
 
 * Requirements
 

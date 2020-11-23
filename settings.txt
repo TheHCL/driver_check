@@ -1,2 +1,3 @@
-report_name=bang.xlsx
+tool_name=devcon.exe
+report_name=stress.xlsx
 HWID_list=drv_list.txt
