@@ -72,12 +72,26 @@ def get_device_version():
             line =f.readline().strip("\n")
         f.close()
 
+
+def get_os_build_version():
+    os.system("ver > os_ver.txt")
+    f = open("os_ver.txt")
+    global os_ver
+    os_ver = f.readline().strip("\n")
+    os_ver = f.readline().strip("\n")
+    os_ver = os_ver.replace("Microsoft Windows [Version 10.0.","")
+    os_ver = os_ver.replace("]","")
+    f.close()
+
 def to_excel():   
     if os.path.exists(report_name):
         wb = openpyxl.load_workbook(report_name)
         sheet = wb.active
         # load excel and active (ready to write data)
         get_device_version()
+        get_os_build_version()
+        drv_description.insert(0,"OS version")
+        drv_version.insert(0,os_ver)
         sheet.append(drv_description)
         sheet.append(drv_version)
         wb.save(report_name)
@@ -89,6 +103,7 @@ def to_excel():
 def clear_temp_data():
     for x in name_list:
         os.remove(x)
+    os.remove("os_ver.txt")
     print("done")
 
 
